@@ -36,6 +36,7 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology : true
         }
         type Query {
             allTrainingSessions: [TrainingSession]
+            allExercises: [Exercise]
         }
         type Mutation {
             addExercise(
@@ -56,6 +57,10 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology : true
             allTrainingSessions: async (root, args) => {
                 const trainingSessions = await TrainingSession.find({})
                 return trainingSessions
+            },
+            allExercises: async (root, args) => {
+                const exercises = await Exercise.find({})
+                return exercises
             }
         },
         Mutation: {
