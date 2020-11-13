@@ -23,7 +23,7 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology : true
 
     const typeDefs = gql`
         type Exercise {
-            if: ID!
+            id: ID!
             movement: String
             sets: Int
             reps: Int
@@ -76,8 +76,11 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology : true
                 } catch (e) {
                     console.log(e)
                 }
+
+                return exercise
             },
             addTrainingSession: async (root, args) => {
+
                 const trainingSession = new TrainingSession( {
                     date: args.date,
                     exercises: args.exercises
@@ -87,6 +90,8 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology : true
                 } catch (e) {
                     console.log(e)
                 }
+
+                return trainingSession
             }
         }
     }
