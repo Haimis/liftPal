@@ -12,10 +12,6 @@ const schema = new mongoose.Schema({
     },
     weight: {
         type: Number
-    },
-    trainingSession: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'TrainingSession'
     }
 })
 
