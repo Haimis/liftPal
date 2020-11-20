@@ -36,7 +36,7 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology : true
         }
         type Query {
             allTrainingSessions: [TrainingSession]
-            allExercises: [Exercise]
+            allExercises(id: String): [Exercise]
         }
         type Mutation {
             addExercise(
@@ -59,9 +59,22 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology : true
                 return trainingSessions
             },
             allExercises: async (root, args) => {
+                if (args.id) {
+                    return await Exercise.findOne({_id: root.id})
+                }
+
                 const exercises = await Exercise.find({})
                 return exercises
             }
+        },
+        TrainingSession: {
+            exercises: async (root) => {
+                const exercises = await Promise.all(
+                    root.exercises.map(async (e) => {
+                        return await Exercise.findOne({_id: e})
+                }))
+                return exercises
+            } 
         },
         Mutation: {
             addExercise: async (root, args, context) => {
@@ -81,7 +94,7 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology : true
             },
             addTrainingSession: async (root, args) => {
 
-                const exerciseIds = await Promise.all(
+                const savedExercises = await Promise.all(
                     args.exercises.map(async (e) => {
                         const jsonE = JSON.parse(e)
                         const exercise = new Exercise( {
@@ -90,15 +103,14 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology : true
                             reps: jsonE.reps,
                             weight: jsonE.weight
                         })
-                        const id = await exercise.save()
-                        return id
-                }));
+                        return exercise.save()
+                }))
 
-                console.log(exerciseIds)
+                console.log(savedExercises)
 
                 const trainingSession = new TrainingSession( {
                     date: args.date,
-                    exercises: exerciseIds
+                    exercises: savedExercises
                 })
                 try {
                     await trainingSession.save()
@@ -108,7 +120,8 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology : true
 
                 return trainingSession
             }
-        }
+        },
+        
     }
 
     const server = new ApolloServer({
