@@ -12,7 +12,7 @@ const Exercises = (exercises) => {
                     <td>weight</td>
                 </tr>
                 {exercises.exercises.allExercises.map(e =>
-                <tr key={e.movement}>
+                <tr key={e.id}>
                     <td>{e.movement}</td>
                     <td>{e.sets}</td>
                     <td>{e.reps}</td>
