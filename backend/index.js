@@ -47,7 +47,7 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology : true
             ): Exercise
             addTrainingSession (
                 date: Int
-                exercises: [ID!]
+                exercises: [String!]
             ): TrainingSession
         }
     `
@@ -81,9 +81,24 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology : true
             },
             addTrainingSession: async (root, args) => {
 
+                const exerciseIds = await Promise.all(
+                    args.exercises.map(async (e) => {
+                        const jsonE = JSON.parse(e)
+                        const exercise = new Exercise( {
+                            movement: jsonE.movement,
+                            sets: jsonE.sets,
+                            reps: jsonE.reps,
+                            weight: jsonE.weight
+                        })
+                        const id = await exercise.save()
+                        return id
+                }));
+
+                console.log(exerciseIds)
+
                 const trainingSession = new TrainingSession( {
                     date: args.date,
-                    exercises: args.exercises
+                    exercises: exerciseIds
                 })
                 try {
                     await trainingSession.save()

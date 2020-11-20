@@ -22,11 +22,13 @@ const TrainingSessionForm = () => {
 
     const handleSubmit = async ( event ) => {
         event.preventDefault()
-
+        
         const date = 123
+        const exercises2 = exercises.map((e) => JSON.stringify(e))
 
+        console.log('e2', exercises2)
         newTrainingSession({
-            variables:{date, exercises}
+            variables:{date, exercises2}
         })
         
         setExercises([])

@@ -12,10 +12,10 @@ query {
 `
 
 export const NEW_TRAINING_SESSION = gql`
-  mutation newTrainingSession($date: Int, $exercises: [Exercise]) {
+  mutation newTrainingSession($date: Int, $exercises2: [String!]) {
     addTrainingSession (
       date: $date
-      exercises: $exercises
+      exercises: $exercises2
     ){
       id
     }
