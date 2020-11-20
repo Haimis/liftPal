@@ -26,7 +26,6 @@ const TrainingSessionForm = () => {
         const date = 123
         const exercises2 = exercises.map((e) => JSON.stringify(e))
 
-        console.log('e2', exercises2)
         newTrainingSession({
             variables:{date, exercises2}
         })

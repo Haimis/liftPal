@@ -11,6 +11,22 @@ query {
 }
 `
 
+export const ALL_TRAINING_SESSIONS = gql`
+query {
+  allTrainingSessions {
+    id
+    date
+    exercises {
+      id
+      movement
+      sets
+      reps
+      weight
+    }
+  }
+}
+`
+
 export const NEW_TRAINING_SESSION = gql`
   mutation newTrainingSession($date: Int, $exercises2: [String!]) {
     addTrainingSession (
